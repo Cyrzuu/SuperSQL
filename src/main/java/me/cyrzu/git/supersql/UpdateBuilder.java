@@ -1,5 +1,6 @@
 package me.cyrzu.git.supersql;
 
+import me.cyrzu.git.supersql.sql.SuperSQL;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;

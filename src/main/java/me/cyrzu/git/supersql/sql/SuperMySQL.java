@@ -1,5 +1,6 @@
-package me.cyrzu.git.supersql;
+package me.cyrzu.git.supersql.sql;
 
+import me.cyrzu.git.supersql.Types;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;

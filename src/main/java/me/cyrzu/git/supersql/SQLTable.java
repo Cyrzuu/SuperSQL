@@ -3,6 +3,7 @@ package me.cyrzu.git.supersql;
 import lombok.Getter;
 import me.cyrzu.git.supersql.column.AbstractColumn;
 import me.cyrzu.git.supersql.column.AbstractKeyColumn;
+import me.cyrzu.git.supersql.sql.SuperSQL;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

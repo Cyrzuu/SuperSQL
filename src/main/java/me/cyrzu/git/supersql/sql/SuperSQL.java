@@ -1,6 +1,9 @@
-package me.cyrzu.git.supersql;
+package me.cyrzu.git.supersql.sql;
 
 import lombok.Getter;
+import me.cyrzu.git.supersql.SQLTable;
+import me.cyrzu.git.supersql.Types;
+import me.cyrzu.git.supersql.UpdateBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
