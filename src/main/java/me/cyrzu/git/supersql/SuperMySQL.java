@@ -8,7 +8,7 @@ import java.sql.DriverManager;
 public class SuperMySQL extends SuperSQL {
 
     public SuperMySQL(String host, String port, String database, String user, String password) {
-        super(getConnection(host, port, database, user, password));
+        super(getConnection(host, port, database, user, password), Types.MYSQL);
     }
 
     @NotNull

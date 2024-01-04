@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class SuperSQLite extends SuperSQL {
 
     public SuperSQLite(@NotNull File file) {
-        super(getConnection(file));
+        super(getConnection(file), Types.SQLITE);
     }
 
     @NotNull

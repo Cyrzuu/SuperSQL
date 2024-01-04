@@ -17,10 +17,16 @@ public abstract class SuperSQL {
     @NotNull
     protected final Connection connection;
 
+    @Getter
+    @NotNull
+    private final Types type;
+
     private final Map<String, SQLTable> tables = new HashMap<>();
 
-    public SuperSQL(@NotNull Connection connection) {
+
+    public SuperSQL(@NotNull Connection connection, @NotNull Types type) {
         this.connection = connection;
+        this.type = type;
     }
 
     public void createTable(@NotNull SQLTable sqlTable) {
@@ -40,6 +46,11 @@ public abstract class SuperSQL {
     @Nullable
     public SQLTable getTable(@NotNull String tableName) {
         return tables.get(tableName);
+    }
+
+    @NotNull
+    public SQLTable.Builder tableBuilder(@NotNull String name) {
+        return SQLTable.builder(this, name);
     }
 
 }

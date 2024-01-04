@@ -3,6 +3,7 @@ package me.cyrzu.git.supersql;
 import lombok.Getter;
 import me.cyrzu.git.supersql.column.AbstractColumn;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,9 +21,18 @@ public class SQLTable {
     @NotNull
     private final Map<String, AbstractColumn> columns;
 
-    private SQLTable(@NotNull String name, @NotNull Map<String, AbstractColumn> columns) {
+    @Getter
+    @Nullable
+    private AbstractColumn key = null;
+
+    @Getter
+    @NotNull
+    private final String INSERT;
+
+    private SQLTable(@NotNull String name, @NotNull Map<String, AbstractColumn> columns, @NotNull SuperSQL sql) {
         this.name = name;
         this.columns = columns;
+        this.INSERT = sql.getType().insertAndUpdate(this);
     }
 
     @NotNull
@@ -51,11 +61,19 @@ public class SQLTable {
         return builder.toString();
     }
 
-    public static Builder builder(@NotNull String name) {
-        return new Builder(name);
+    @NotNull
+    public Map<String, AbstractColumn> getColumns() {
+        return Map.copyOf(columns);
+    }
+
+    public static Builder builder(@NotNull SuperSQL sql, @NotNull String name) {
+        return new Builder(sql, name);
     }
 
     public static class Builder {
+
+        @NotNull
+        private final SuperSQL sql;
 
         @NotNull
         private final String name;
@@ -63,7 +81,11 @@ public class SQLTable {
         @NotNull
         private final Map<String, AbstractColumn> columns;
 
-        private Builder(@NotNull String name) {
+        @Nullable
+        private AbstractColumn key = null;
+
+        private Builder(@NotNull SuperSQL sql, @NotNull String name) {
+            this.sql = sql;
             this.name = name;
             this.columns = new LinkedHashMap<>();
         }
@@ -74,12 +96,18 @@ public class SQLTable {
         }
 
         public Builder add(@NotNull AbstractColumn column) {
+            columns.values().stream().filter(AbstractColumn::isPrimaryKey).findAny().ifPresentOrElse(var -> column.unique().notNull(), () -> this.key = column);
             columns.put(column.getName(), column);
             return this;
         }
 
         public @NotNull SQLTable build() {
-            return new SQLTable(name, columns);
+            SQLTable table = new SQLTable(name, columns, sql);
+            if(key != null) {
+                table.key = key;
+            }
+
+            return table;
         }
 
     }
