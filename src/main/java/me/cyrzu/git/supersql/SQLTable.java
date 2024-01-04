@@ -25,7 +25,6 @@ public class SQLTable {
         this.columns = columns;
     }
 
-
     @NotNull
     public PreparedStatement getCreateStatement(@NotNull Connection connection) {
         try {
@@ -38,8 +37,6 @@ public class SQLTable {
     @NotNull
     public String getCreateCommand() {
         StringBuilder builder = new StringBuilder("CREATE TABLE IF NOT EXISTS " + name + " (");
-
-
         final List<AbstractColumn> values = List.copyOf(columns.values());
         for (int i = 0; i < values.size(); i++) {
             final AbstractColumn column = values.get(i);

@@ -28,10 +28,8 @@ public abstract class SuperSQL {
     }
 
     public void createTable(@NotNull SQLTable sqlTable, @Nullable Consumer<SQLException> exception) {
-        try {
-            PreparedStatement statement = this.connection.prepareStatement("CREATE TABLE IF NOT EXISTS my_table (column1 INT, column2 VARCHAR(255))");
-            System.out.println(statement.executeUpdate());
-//            this.tables.put(sqlTable.getName(), sqlTable);
+        try(PreparedStatement statement = sqlTable.getCreateStatement(this.connection)) {
+           statement.executeUpdate();
         } catch (SQLException e) {
             if(exception != null) {
                 exception.accept(e);

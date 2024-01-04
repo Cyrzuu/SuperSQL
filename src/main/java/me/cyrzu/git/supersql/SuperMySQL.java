@@ -14,7 +14,6 @@ public class SuperMySQL extends SuperSQL {
     @NotNull
     private static Connection getConnection(String host, String port, String database, String user, String password) {
         String url = String.format("jdbc:mysql://%s:%s/%s?autoReconnect=true", host, port, database);
-        System.out.println(url);
         try {
             return DriverManager.getConnection(url, user, password);
         } catch (Exception e) {
