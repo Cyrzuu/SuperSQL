@@ -10,7 +10,7 @@ public enum Types {
     MYSQL {
         @Override
         @NotNull String insertAndUpdate(@NotNull SQLTable table) {
-            StringBuilder builder = new StringBuilder("INSERT INTO" ).append(table.getName()).append(" (");
+            StringBuilder builder = new StringBuilder("INSERT INTO").append(table.getName()).append(" (");
             StringBuilder questMark = new StringBuilder();
 
             Iterator<AbstractColumn> iterator = table.getColumns().values().iterator();
@@ -48,7 +48,23 @@ public enum Types {
     SQLITE {
         @Override
         @NotNull String insertAndUpdate(@NotNull SQLTable table) {
-            return "null";
+            StringBuilder builder = new StringBuilder("INSERT OR REPLACE INTO ").append(table.getName()).append(" (");
+            StringBuilder questMark = new StringBuilder();
+
+            Iterator<AbstractColumn> iterator = table.getColumns().values().iterator();
+            while (iterator.hasNext()) {
+                AbstractColumn next = iterator.next();
+                builder.append(next.getName());
+                questMark.append("?");
+
+                if(iterator.hasNext()) {
+                    builder.append(", ");
+                    questMark.append(", ");
+                }
+            }
+
+            builder.append(") VALUES (").append(questMark).append(");");
+            return builder.toString();
         }
     };
 
