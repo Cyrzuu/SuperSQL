@@ -96,7 +96,11 @@ public class SQLTable {
         }
 
         public Builder add(@NotNull AbstractColumn column) {
-            columns.values().stream().filter(AbstractColumn::isPrimaryKey).findAny().ifPresentOrElse(var -> column.unique().notNull(), () -> this.key = column);
+            System.out.println(key + " < kej");
+            if(this.key == null && column.isPrimaryKey()) {
+                this.key = column;
+            }
+
             columns.put(column.getName(), column);
             return this;
         }

@@ -10,7 +10,7 @@ public enum Types {
     MYSQL {
         @Override
         @NotNull String insertAndUpdate(@NotNull SQLTable table) {
-            StringBuilder builder = new StringBuilder("INSERT INTO").append(table.getName()).append(" (");
+            StringBuilder builder = new StringBuilder("INSERT INTO ").append(table.getName()).append(" (");
             StringBuilder questMark = new StringBuilder();
 
             Iterator<AbstractColumn> iterator = table.getColumns().values().iterator();
@@ -27,7 +27,7 @@ public enum Types {
 
             builder.append(") VALUES (").append(questMark).append(")");
             if(table.getKey() != null) {
-                builder.append(" ON DUPLICATE KEY UPDATE" );
+                builder.append(" ON DUPLICATE KEY UPDATE " );
 
                 Iterator<AbstractColumn> iterator1 = table.getColumns().values().iterator();
                 while (iterator1.hasNext()) {
