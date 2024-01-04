@@ -47,6 +47,7 @@ public class SelectBuilder {
     @NotNull
     public SQLResult execute() {
         StringBuilder builder = new StringBuilder("SELECT");
+        System.out.println(builder);
 
         if(columns.isEmpty()) {
             builder.append(" * ");
@@ -64,6 +65,8 @@ public class SelectBuilder {
 
         builder.append(" FROM ").append(sqlTable.getName());
 
+        System.out.println(builder);
+
         if(!where.isEmpty()) {
             Iterator<Map.Entry<String, Object>> iterator = where.entrySet().iterator();
             while (iterator.hasNext()) {
@@ -75,6 +78,8 @@ public class SelectBuilder {
                 }
             }
         }
+
+        System.out.println(builder);
 
         try(PreparedStatement statement = sqlTable.getSuperSQL().getConnection().prepareStatement(builder.append(";").toString())) {
             int index = 1;
