@@ -8,12 +8,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SQLTable {
+
+    @Getter
+    @NotNull
+    private final SuperSQL superSQL;
 
     @Getter
     @NotNull
@@ -24,49 +28,43 @@ public class SQLTable {
 
     @Getter
     @Nullable
-    private AbstractColumn key = null;
+    private final AbstractColumn key;
 
     @Getter
     @NotNull
     private final String INSERT;
 
-    private SQLTable(@NotNull String name, @NotNull Map<String, AbstractColumn> columns, @Nullable AbstractColumn key, @NotNull SuperSQL sql) {
+    private SQLTable(@NotNull String name, @NotNull Map<String, AbstractColumn> columns, @Nullable AbstractColumn key, @NotNull SuperSQL superSQL) {
+        this.superSQL = superSQL;
         this.name = name;
         this.columns = columns;
         this.key = key;
-        this.INSERT = sql.getType().insertAndUpdate(this);
+        this.INSERT = superSQL.getType().insertAndUpdate(this);
     }
 
     @NotNull
     public PreparedStatement getCreateStatement(@NotNull Connection connection) {
         try {
-            return connection.prepareStatement(getCreateCommand());
+            return connection.prepareStatement(superSQL.getType().createTable(this));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @NotNull
-    public String getCreateCommand() {
-        StringBuilder builder = new StringBuilder("CREATE TABLE IF NOT EXISTS " + name + " (");
-        final List<AbstractColumn> values = List.copyOf(columns.values());
-        for (int i = 0; i < values.size(); i++) {
-            final AbstractColumn column = values.get(i);
-            builder.append(column.create());
-
-            if(i != values.size() - 1) {
-                builder.append(", ");
-            }
-        }
-
-        builder.append(");");
-        return builder.toString();
-    }
-
-    @NotNull
     public Map<String, AbstractColumn> getColumns() {
         return Map.copyOf(columns);
     }
+
+    public void createUpdate(@NotNull SQLObject object) {
+        try(PreparedStatement statement = object.updateObject(new UpdateBuilder(superSQL, this)).build()) {
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
     public static Builder builder(@NotNull SuperSQL sql, @NotNull String name) {
         return new Builder(sql, name);

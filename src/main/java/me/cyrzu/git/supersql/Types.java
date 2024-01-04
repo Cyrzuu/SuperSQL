@@ -5,6 +5,7 @@ import me.cyrzu.git.supersql.column.AbstractKeyColumn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
+import java.util.List;
 
 public enum Types {
 
@@ -45,6 +46,23 @@ public enum Types {
 
             return builder.append(";").toString();
         }
+
+        @Override
+        @NotNull String createTable(@NotNull SQLTable table) {
+            StringBuilder builder = new StringBuilder("CREATE TABLE IF NOT EXISTS " + table.getName() + " (");
+            final List<AbstractColumn> values = List.copyOf(table.getColumns().values());
+            for (int i = 0; i < values.size(); i++) {
+                final AbstractColumn column = values.get(i);
+                builder.append(column.create());
+
+                if(i != values.size() - 1) {
+                    builder.append(", ");
+                }
+            }
+
+            builder.append(");");
+            return builder.toString();
+        }
     },
     SQLITE {
         @Override
@@ -67,9 +85,29 @@ public enum Types {
             builder.append(") VALUES (").append(questMark).append(");");
             return builder.toString();
         }
+
+        @Override
+        @NotNull String createTable(@NotNull SQLTable table) {
+            StringBuilder builder = new StringBuilder("CREATE TABLE IF NOT EXISTS " + table.getName() + " (");
+            final List<AbstractColumn> values = List.copyOf(table.getColumns().values());
+            for (int i = 0; i < values.size(); i++) {
+                final AbstractColumn column = values.get(i);
+                builder.append(column.create());
+
+                if(i != values.size() - 1) {
+                    builder.append(", ");
+                }
+            }
+
+            builder.append(");");
+            return builder.toString();
+        }
     };
 
     @NotNull
     abstract String insertAndUpdate(@NotNull SQLTable table);
+
+    @NotNull
+    abstract String createTable(@NotNull SQLTable table);
 
 }
