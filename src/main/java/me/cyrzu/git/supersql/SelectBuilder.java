@@ -68,9 +68,7 @@ public class SelectBuilder {
             Iterator<Map.Entry<String, Object>> iterator = where.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, Object> next = iterator.next();
-                builder.append(next.getKey()).append(" = '")
-                        .append(next.getValue().toString())
-                        .append("'");
+                builder.append(next.getKey()).append(" = ?");
 
                 if(iterator.hasNext()) {
                     builder.append(" AND ");
@@ -84,7 +82,6 @@ public class SelectBuilder {
                 statement.setObject(index++, value);
             }
 
-            System.out.println(String.format("'%s' < TAKIE QUERY", statement));
             return new SQLResult(statement.executeQuery());
         } catch (SQLException e) {
             throw new RuntimeException(e);
