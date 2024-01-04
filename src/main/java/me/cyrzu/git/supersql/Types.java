@@ -26,6 +26,8 @@ public enum Types {
             }
 
             builder.append(") VALUES (").append(questMark).append(")");
+
+            System.out.println("guguguwno " + table.getKey());
             if(table.getKey() != null) {
                 builder.append(" ON DUPLICATE KEY UPDATE " );
 

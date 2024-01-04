@@ -66,6 +66,11 @@ public class SQLTable {
         return Map.copyOf(columns);
     }
 
+    public SQLTable setKey(@Nullable AbstractColumn column) {
+        this.key = column;
+        return this;
+    }
+
     public static Builder builder(@NotNull SuperSQL sql, @NotNull String name) {
         return new Builder(sql, name);
     }
@@ -106,12 +111,7 @@ public class SQLTable {
         }
 
         public @NotNull SQLTable build() {
-            SQLTable table = new SQLTable(name, columns, sql);
-            if(key != null) {
-                table.key = key;
-            }
-
-            return table;
+            return new SQLTable(name, columns, sql).setKey(this.key);
         }
 
     }
