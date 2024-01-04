@@ -11,15 +11,11 @@ public class StringColumn extends AbstractColumn {
     @Override
     public String create() {
         StringBuilder builder = new StringBuilder(name + " TEXT");
-        if(isPrimaryKey()) {
-            builder.append(" PRIMARY KEY");
-        } else {
-            if(isUnique()) {
-                builder.append(" UNIQUE");
-            }
-            if(isNotNull()) {
-                builder.append(" NOT NULL");
-            }
+        if(isUnique()) {
+            builder.append(" UNIQUE");
+        }
+        if(isNotNull()) {
+            builder.append(" NOT NULL");
         }
 
         return builder.toString();

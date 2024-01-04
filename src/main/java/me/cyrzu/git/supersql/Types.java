@@ -1,6 +1,7 @@
 package me.cyrzu.git.supersql;
 
 import me.cyrzu.git.supersql.column.AbstractColumn;
+import me.cyrzu.git.supersql.column.AbstractKeyColumn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -33,7 +34,7 @@ public enum Types {
                 Iterator<AbstractColumn> iterator1 = table.getColumns().values().iterator();
                 while (iterator1.hasNext()) {
                     AbstractColumn next = iterator1.next();
-                    if(next.isPrimaryKey()) continue;
+                    if(next instanceof AbstractKeyColumn nextKey && nextKey.isPrimaryKey()) continue;
 
                     builder.append(next.getName()).append(" = VALUES(").append(next.getName()).append(")");
                     if(iterator1.hasNext()) {

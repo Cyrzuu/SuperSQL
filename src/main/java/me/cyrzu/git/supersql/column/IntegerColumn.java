@@ -2,7 +2,7 @@ package me.cyrzu.git.supersql.column;
 
 import org.jetbrains.annotations.NotNull;
 
-public class IntegerColumn extends AbstractColumn {
+public class IntegerColumn extends AbstractKeyColumn {
 
     public IntegerColumn(@NotNull String name) {
         super(name);

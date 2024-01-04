@@ -29,41 +29,46 @@ public class UpdateBuilder {
         }
     }
 
-    public void put(@NotNull String value) {
+    public UpdateBuilder put(@NotNull String value) {
         try {
             statement.setString(index++, value);
+            return this;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void put(int value) {
+    public UpdateBuilder put(int value) {
         try {
             statement.setInt(index++, value);
+            return this;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void put(long value) {
+    public UpdateBuilder put(long value) {
         try {
             statement.setLong(index++, value);
+            return this;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void put(double value) {
+    public UpdateBuilder put(double value) {
         try {
             statement.setDouble(index++, value);
+            return this;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void put(byte[] value) {
+    public UpdateBuilder put(byte[] value) {
         try {
             statement.setBytes(index++, value);
+            return this;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

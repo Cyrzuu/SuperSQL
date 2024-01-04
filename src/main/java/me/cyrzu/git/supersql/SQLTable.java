@@ -2,6 +2,7 @@ package me.cyrzu.git.supersql;
 
 import lombok.Getter;
 import me.cyrzu.git.supersql.column.AbstractColumn;
+import me.cyrzu.git.supersql.column.AbstractKeyColumn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,7 +99,7 @@ public class SQLTable {
 
         public Builder add(@NotNull AbstractColumn column) {
             System.out.println(key + " < kej");
-            if(this.key == null && column.isPrimaryKey()) {
+            if(this.key == null && column instanceof AbstractKeyColumn keyColumn && keyColumn.isPrimaryKey()) {
                 this.key = column;
             }
 

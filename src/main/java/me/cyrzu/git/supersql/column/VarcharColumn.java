@@ -2,7 +2,7 @@ package me.cyrzu.git.supersql.column;
 
 import org.jetbrains.annotations.NotNull;
 
-public class VarcharColumn extends AbstractColumn {
+public class VarcharColumn extends AbstractKeyColumn {
 
     private final int max;
 
