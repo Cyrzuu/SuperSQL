@@ -8,20 +8,11 @@ import java.sql.SQLException;
 public class UpdateBuilder {
 
     @NotNull
-    private final SuperSQL sql;
-
-    @NotNull
-    private final SQLTable table;
-
-    @NotNull
     private final PreparedStatement statement;
 
     private int index = 1;
 
     public UpdateBuilder(@NotNull SuperSQL sql, @NotNull SQLTable table) {
-        this.sql = sql;
-        this.table = table;
-
         try {
             this.statement = sql.getConnection().prepareStatement(table.getINSERT());
         } catch (SQLException e) {

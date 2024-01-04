@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -64,7 +65,25 @@ public class SQLTable {
         }
     }
 
+    public SelectBuilder createSelect(@NotNull String... columns) {
+        return new SelectBuilder(this, columns);
+    }
 
+    public SelectBuilder createSelect() {
+        return new SelectBuilder(this);
+    }
+
+    public SQLResult sqlResult(@NotNull String sql) {
+        return new SQLResult(sqlQuery(sql));
+    }
+
+    public ResultSet sqlQuery(@NotNull String sql) {
+        try(PreparedStatement statement = superSQL.getConnection().prepareStatement(sql)) {
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static Builder builder(@NotNull SuperSQL sql, @NotNull String name) {
         return new Builder(sql, name);

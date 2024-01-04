@@ -29,5 +29,4 @@ public class VarcharColumn extends AbstractKeyColumn {
         return builder.toString();
     }
 
-
 }
