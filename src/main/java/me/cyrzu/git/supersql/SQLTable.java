@@ -29,9 +29,10 @@ public class SQLTable {
     @NotNull
     private final String INSERT;
 
-    private SQLTable(@NotNull String name, @NotNull Map<String, AbstractColumn> columns, @NotNull SuperSQL sql) {
+    private SQLTable(@NotNull String name, @NotNull Map<String, AbstractColumn> columns, @Nullable AbstractColumn key, @NotNull SuperSQL sql) {
         this.name = name;
         this.columns = columns;
+        this.key = key;
         this.INSERT = sql.getType().insertAndUpdate(this);
     }
 
@@ -64,11 +65,6 @@ public class SQLTable {
     @NotNull
     public Map<String, AbstractColumn> getColumns() {
         return Map.copyOf(columns);
-    }
-
-    public SQLTable setKey(@Nullable AbstractColumn column) {
-        this.key = column;
-        return this;
     }
 
     public static Builder builder(@NotNull SuperSQL sql, @NotNull String name) {
@@ -111,7 +107,7 @@ public class SQLTable {
         }
 
         public @NotNull SQLTable build() {
-            return new SQLTable(name, columns, sql).setKey(this.key);
+            return new SQLTable(name, columns, key, sql);
         }
 
     }
