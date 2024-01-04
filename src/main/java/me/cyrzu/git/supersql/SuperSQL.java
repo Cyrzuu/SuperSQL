@@ -15,7 +15,7 @@ public abstract class SuperSQL {
 
     @Getter
     @NotNull
-    protected final Connection connection;
+    private final Connection connection;
 
     @Getter
     @NotNull
@@ -51,6 +51,11 @@ public abstract class SuperSQL {
     @NotNull
     public SQLTable.Builder tableBuilder(@NotNull String name) {
         return SQLTable.builder(this, name);
+    }
+
+    @NotNull
+    public UpdateBuilder statementBuilder(@NotNull SQLTable table) {
+        return new UpdateBuilder(this, table);
     }
 
 }

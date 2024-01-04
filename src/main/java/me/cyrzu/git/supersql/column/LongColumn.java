@@ -22,6 +22,7 @@ public class LongColumn extends AbstractColumn {
             }
         }
 
+
         return builder.toString();
     }
 
