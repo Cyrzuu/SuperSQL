@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class SQLTable {
 
@@ -78,12 +79,16 @@ public class SQLTable {
         return new DeleteBuilder(this);
     }
 
-    public void createUpdate(@NotNull SQLObject object) {
-        try(PreparedStatement statement = object.updateObject(new UpdateBuilder(this)).build()) {
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public int createUpdate(@NotNull SQLObject object) {
+        return object.updateObject(new UpdateBuilder(this)).execute();
+    }
+
+    public void createAsyncUpdate(@NotNull SQLObject object) {
+        createAsyncUpdate(object, null);
+    }
+
+    public void createAsyncUpdate(@NotNull SQLObject object, @Nullable Consumer<Integer> consumer) {
+        object.updateObject(new UpdateBuilder(this)).executeAsync(consumer);
     }
 
     public SQLResult sqlResult(@NotNull String sql) {
