@@ -147,7 +147,6 @@ public class SQLTable {
 
             return new SQLTable(name, newMap, key, sql);
         }
-
     }
 
 }

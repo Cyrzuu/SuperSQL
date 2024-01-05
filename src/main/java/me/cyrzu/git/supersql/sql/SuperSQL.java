@@ -5,6 +5,7 @@ import me.cyrzu.git.supersql.SQLTable;
 import me.cyrzu.git.supersql.SelectBuilder;
 import me.cyrzu.git.supersql.Types;
 import me.cyrzu.git.supersql.UpdateBuilder;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,6 +20,10 @@ public abstract class SuperSQL {
 
     @Getter
     @NotNull
+    private final JavaPlugin plugin;
+
+    @Getter
+    @NotNull
     private final Connection connection;
 
     @Getter
@@ -28,7 +33,8 @@ public abstract class SuperSQL {
     private final Map<String, SQLTable> tables = new HashMap<>();
 
 
-    public SuperSQL(@NotNull Connection connection, @NotNull Types type) {
+    public SuperSQL(@NotNull JavaPlugin plugin, @NotNull Connection connection, @NotNull Types type) {
+        this.plugin = plugin;
         this.connection = connection;
         this.type = type;
     }

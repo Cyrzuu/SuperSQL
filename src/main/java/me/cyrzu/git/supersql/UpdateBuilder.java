@@ -1,12 +1,18 @@
 package me.cyrzu.git.supersql;
 
-import me.cyrzu.git.supersql.sql.SuperSQL;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.function.Consumer;
 
 public class UpdateBuilder {
+
+    @NotNull
+    private final JavaPlugin plugin;
 
     @NotNull
     private final PreparedStatement statement;
@@ -15,6 +21,7 @@ public class UpdateBuilder {
 
     public UpdateBuilder(@NotNull SQLTable table) {
         try {
+            this.plugin = table.getSuperSQL().getPlugin();
             this.statement = table.getSuperSQL().getConnection().prepareStatement(table.getINSERT());
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -69,6 +76,19 @@ public class UpdateBuilder {
     @NotNull
     public PreparedStatement build() {
         return statement;
+    }
+
+    public void executeAsync() {
+        executeAsync(null);
+    }
+
+    public void executeAsync(@Nullable Consumer<Integer> consumer) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+           int index = execute();
+           if(consumer != null) {
+               consumer.accept(index);
+           }
+        });
     }
 
     public int execute() {

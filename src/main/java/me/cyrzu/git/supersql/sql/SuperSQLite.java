@@ -1,6 +1,7 @@
 package me.cyrzu.git.supersql.sql;
 
 import me.cyrzu.git.supersql.Types;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -11,8 +12,8 @@ import java.sql.SQLException;
 
 public class SuperSQLite extends SuperSQL {
 
-    public SuperSQLite(@NotNull File file) {
-        super(getConnection(file), Types.SQLITE);
+    public SuperSQLite(@NotNull JavaPlugin plugin, @NotNull File file) {
+        super(plugin, getConnection(file), Types.SQLITE);
     }
 
     @NotNull
