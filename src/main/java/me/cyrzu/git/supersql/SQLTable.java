@@ -11,9 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class SQLTable {
 
@@ -58,20 +56,30 @@ public class SQLTable {
         return Map.copyOf(columns);
     }
 
+    @NotNull
+    public List<AbstractColumn> getColumnList() {
+        return List.copyOf(columns.values());
+    }
+
+    @NotNull
+    public UpdateBuilder updateBuilder() {
+        return new UpdateBuilder(this);
+    }
+
+    public SelectBuilder selectBuilder(@NotNull String... columns) {
+        return new SelectBuilder(this, columns);
+    }
+
+    public SelectBuilder selectBuilder() {
+        return new SelectBuilder(this);
+    }
+
     public void createUpdate(@NotNull SQLObject object) {
-        try(PreparedStatement statement = object.updateObject(new UpdateBuilder(superSQL, this)).build()) {
+        try(PreparedStatement statement = object.updateObject(new UpdateBuilder(this)).build()) {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public SelectBuilder createSelect(@NotNull String... columns) {
-        return new SelectBuilder(this, columns);
-    }
-
-    public SelectBuilder createSelect() {
-        return new SelectBuilder(this);
     }
 
     public SQLResult sqlResult(@NotNull String sql) {
@@ -116,7 +124,6 @@ public class SQLTable {
         }
 
         public Builder add(@NotNull AbstractColumn column) {
-            System.out.println(key + " < kej");
             if(this.key == null && column instanceof AbstractKeyColumn keyColumn && keyColumn.isPrimaryKey()) {
                 this.key = column;
             }
@@ -126,7 +133,15 @@ public class SQLTable {
         }
 
         public @NotNull SQLTable build() {
-            return new SQLTable(name, columns, key, sql);
+            List<AbstractColumn> values = new ArrayList<>(columns.values());
+            values.sort(Comparator.comparing(colum -> !(colum instanceof AbstractKeyColumn key) || !key.isPrimaryKey()));
+
+            LinkedHashMap<String, AbstractColumn> newMap = new LinkedHashMap<>();
+            for (AbstractColumn value : values) {
+                newMap.put(value.getName(), value);
+            }
+
+            return new SQLTable(name, newMap, key, sql);
         }
 
     }

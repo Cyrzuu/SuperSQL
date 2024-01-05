@@ -4,8 +4,7 @@ import me.cyrzu.git.supersql.column.AbstractColumn;
 import me.cyrzu.git.supersql.column.AbstractKeyColumn;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public enum Types {
 
@@ -15,7 +14,7 @@ public enum Types {
             StringBuilder builder = new StringBuilder("INSERT INTO ").append(table.getName()).append(" (");
             StringBuilder questMark = new StringBuilder();
 
-            Iterator<AbstractColumn> iterator = table.getColumns().values().iterator();
+            Iterator<AbstractColumn> iterator = table.getColumnList().iterator();
             while (iterator.hasNext()) {
                 AbstractColumn next = iterator.next();
                 builder.append(next.getName());
@@ -32,10 +31,18 @@ public enum Types {
             if(table.getKey() != null) {
                 builder.append(" ON DUPLICATE KEY UPDATE " );
 
-                Iterator<AbstractColumn> iterator1 = table.getColumns().values().iterator();
+                List<AbstractColumn> values = new ArrayList<>(table.getColumns().values());
+                values.sort(Comparator.comparing(colum -> !(colum instanceof AbstractKeyColumn key) || !key.isPrimaryKey()));
+
+                Iterator<AbstractColumn> iterator1 = values.iterator();
+
+
                 while (iterator1.hasNext()) {
                     AbstractColumn next = iterator1.next();
-                    if(next instanceof AbstractKeyColumn nextKey && nextKey.isPrimaryKey()) continue;
+                    if(next instanceof AbstractKeyColumn nextKey && nextKey.isPrimaryKey()) {
+                        iterator1.remove();
+                        continue;
+                    }
 
                     builder.append(next.getName()).append(" = VALUES(").append(next.getName()).append(")");
                     if(iterator1.hasNext()) {
@@ -50,12 +57,13 @@ public enum Types {
         @Override
         @NotNull String createTable(@NotNull SQLTable table) {
             StringBuilder builder = new StringBuilder("CREATE TABLE IF NOT EXISTS " + table.getName() + " (");
-            final List<AbstractColumn> values = List.copyOf(table.getColumns().values());
-            for (int i = 0; i < values.size(); i++) {
-                final AbstractColumn column = values.get(i);
+            Iterator<AbstractColumn> iterator = table.getColumnList().iterator();
+
+            while (iterator.hasNext()) {
+                AbstractColumn column = iterator.next();
                 builder.append(column.create());
 
-                if(i != values.size() - 1) {
+                if (iterator.hasNext()) {
                     builder.append(", ");
                 }
             }

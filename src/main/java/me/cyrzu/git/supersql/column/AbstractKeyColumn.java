@@ -33,4 +33,13 @@ public abstract class AbstractKeyColumn extends AbstractColumn {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "AbstractKeyColumn{" +
+                "primaryKey=" + primaryKey +
+                ", name='" + name + '\'' +
+                ", unique=" + unique +
+                ", notNull=" + notNull +
+                '}';
+    }
 }

@@ -2,6 +2,7 @@ package me.cyrzu.git.supersql.sql;
 
 import lombok.Getter;
 import me.cyrzu.git.supersql.SQLTable;
+import me.cyrzu.git.supersql.SelectBuilder;
 import me.cyrzu.git.supersql.Types;
 import me.cyrzu.git.supersql.UpdateBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -57,8 +58,16 @@ public abstract class SuperSQL {
     }
 
     @NotNull
-    public UpdateBuilder statementBuilder(@NotNull SQLTable table) {
-        return new UpdateBuilder(this, table);
+    public UpdateBuilder updateBuilder(@NotNull SQLTable table) {
+        return new UpdateBuilder(table);
+    }
+
+    public SelectBuilder selectBuilder(@NotNull SQLTable table, @NotNull String... columns) {
+        return new SelectBuilder(table, columns);
+    }
+
+    public SelectBuilder selectBuilder(@NotNull SQLTable table) {
+        return new SelectBuilder(table);
     }
 
 }

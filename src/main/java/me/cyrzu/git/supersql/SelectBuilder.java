@@ -3,6 +3,7 @@ package me.cyrzu.git.supersql;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -47,10 +48,9 @@ public class SelectBuilder {
     @NotNull
     public SQLResult execute() {
         StringBuilder builder = new StringBuilder("SELECT");
-        System.out.println(builder);
 
         if(columns.isEmpty()) {
-            builder.append(" * ");
+            builder.append(" *");
         } else {
             Iterator<String> iterator = columns.iterator();
             while (iterator.hasNext()) {
@@ -65,9 +65,9 @@ public class SelectBuilder {
 
         builder.append(" FROM ").append(sqlTable.getName());
 
-        System.out.println(builder);
-
         if(!where.isEmpty()) {
+            builder.append(" WHERE ");
+
             Iterator<Map.Entry<String, Object>> iterator = where.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, Object> next = iterator.next();
@@ -79,9 +79,9 @@ public class SelectBuilder {
             }
         }
 
-        System.out.println(builder);
+        try {
+            PreparedStatement statement = sqlTable.getSuperSQL().getConnection().prepareStatement(builder.append(";").toString());
 
-        try(PreparedStatement statement = sqlTable.getSuperSQL().getConnection().prepareStatement(builder.append(";").toString())) {
             int index = 1;
             for (Object value : where.values()) {
                 statement.setObject(index++, value);

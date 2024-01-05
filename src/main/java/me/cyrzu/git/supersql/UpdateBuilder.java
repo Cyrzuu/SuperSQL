@@ -13,9 +13,9 @@ public class UpdateBuilder {
 
     private int index = 1;
 
-    public UpdateBuilder(@NotNull SuperSQL sql, @NotNull SQLTable table) {
+    public UpdateBuilder(@NotNull SQLTable table) {
         try {
-            this.statement = sql.getConnection().prepareStatement(table.getINSERT());
+            this.statement = table.getSuperSQL().getConnection().prepareStatement(table.getINSERT());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -66,8 +66,17 @@ public class UpdateBuilder {
         }
     }
 
-    public @NotNull PreparedStatement build() {
+    @NotNull
+    public PreparedStatement build() {
         return statement;
+    }
+
+    public int execute() {
+        try {
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
