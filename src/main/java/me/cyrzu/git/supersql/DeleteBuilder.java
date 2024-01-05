@@ -37,7 +37,7 @@ public class DeleteBuilder {
     }
 
     public int execute() {
-        StringBuilder builder = new StringBuilder("SELECT FROM ").append(sqlTable.getName());
+        StringBuilder builder = new StringBuilder("DELETE FROM ").append(sqlTable.getName());
 
         if(!where.isEmpty()) {
             builder.append(" WHERE ");
