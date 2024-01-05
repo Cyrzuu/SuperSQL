@@ -27,3 +27,43 @@ dependencies {
         implementation 'com.github.Cyrzuu:SuperSQL:1.0.0'
 }
 ```
+
+**Example**
+```java
+SuperSQL superSQL = new SuperMySQL(DATABASE_HOST, DATABASE_PORT, DATABASE_BASE, DATABASE_USERNAME, DATABASE_PASSWORD);
+
+SQLTable table = SQLTable.builder(superSQL, "table_name")
+        .add(new VarcharColumn("uuid", 36).primaryKey())
+        .add(new StringColumn("username"))
+        .add(new IntegerColumn("kills"))
+        .add(new BytesColumn("bytes"))
+        .build();
+
+superSQL.createTable(table, Throwable::printStackTrace);
+
+PlayerObject playerObject = new PlayerObject();
+table.createUpdate(playerObject);
+```
+
+``java
+public class PlayerObject implements SQLObject {
+
+    private final UUID uuid = UUID.randomUUID();
+
+    private final String name = UUID.randomUUID().toString().substring(0, 8);
+
+    private final int kills = new Random().nextInt(25);
+
+    private final byte[] bytes = new byte[0];
+
+    @Override
+    public @NotNull UpdateBuilder updateObject(@NotNull UpdateBuilder updateBuilder) {
+        return updateBuilder
+                .put(uuid.toString())
+                .put(name)
+                .put(kills)
+                .put(bytes);
+    }
+
+}
+```
