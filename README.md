@@ -30,7 +30,7 @@ dependencies {
 
 **Example**
 ```java
-SuperSQL superSQL = new SuperMySQL(DATABASE_HOST, DATABASE_PORT, DATABASE_BASE, DATABASE_USERNAME, DATABASE_PASSWORD);
+SuperSQL superSQL = new SuperMySQL(plugin, DATABASE_HOST, DATABASE_PORT, DATABASE_BASE, DATABASE_USERNAME, DATABASE_PASSWORD);
 
 SQLTable table = SQLTable.builder(superSQL, "table_name")
         .add(new VarcharColumn("uuid", 36).primaryKey())
