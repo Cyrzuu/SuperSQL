@@ -1,9 +1,9 @@
 package me.cyrzu.git.supersql;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -17,6 +17,11 @@ public class SelectBuilder {
 
     @NotNull
     private final Map<String, Object> where;
+
+    @Nullable
+    private Pair<String, Boolean> order;
+
+    private int limit = 0;
 
     public SelectBuilder(@NotNull SQLTable sqlTable) {
         this.sqlTable = sqlTable;
@@ -42,6 +47,16 @@ public class SelectBuilder {
 
     public SelectBuilder where(@NotNull String key, @NotNull Long value) {
         where.put(key, value);
+        return this;
+    }
+
+    public SelectBuilder order(@NotNull String column, boolean descending) {
+        order = new Pair<>(column, descending);
+        return this;
+    }
+
+    public SelectBuilder limit(int limit) {
+        this.limit = Math.max(1, limit);
         return this;
     }
 
@@ -77,6 +92,17 @@ public class SelectBuilder {
                     builder.append(" AND ");
                 }
             }
+        }
+
+        if(order != null) {
+            builder.append(" ORDER BY ").append(order.getKey());
+            if(order.getValue()) {
+                builder.append(" DESC");
+            }
+        }
+
+        if(limit > 0) {
+            builder.append("LIMIT ").append(limit);
         }
 
         try {

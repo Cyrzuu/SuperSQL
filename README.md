@@ -2,7 +2,7 @@ Wow 🤣🤣
 
 [![](https://jitpack.io/v/Cyrzuu/SuperSQL.svg)](https://jitpack.io/#Cyrzuu/SuperSQL)
 
-**Maven:** 
+**Maven:**
 ```xml
 <repository>
     <id>jitpack.io</id>
@@ -10,9 +10,9 @@ Wow 🤣🤣
 </repository>
 
 <dependency>
-    <groupId>com.github.Cyrzuu</groupId>
-    <artifactId>SuperSQL</artifactId>
-    <version>1.0.0</version>
+<groupId>com.github.Cyrzuu</groupId>
+<artifactId>SuperSQL</artifactId>
+<version>1.1.0</version>
 </dependency>
 ```
 
@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-        implementation 'com.github.Cyrzuu:SuperSQL:1.0.0'
+        implementation 'com.github.Cyrzuu:SuperSQL:1.1.0'
 }
 ```
 
@@ -48,6 +48,8 @@ SQLResult result = table.selectBuilder().where("uuid", UUID.randomUUID().toStrin
 while (result.next()) {
     getLogger().info(result.getString("username"));
 }
+
+table.deleteBuilder().where("username", "Notch").execute();
 ```
 
 ```java

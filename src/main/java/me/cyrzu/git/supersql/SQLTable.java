@@ -74,6 +74,10 @@ public class SQLTable {
         return new SelectBuilder(this);
     }
 
+    public DeleteBuilder deleteBuilder() {
+        return new DeleteBuilder(this);
+    }
+
     public void createUpdate(@NotNull SQLObject object) {
         try(PreparedStatement statement = object.updateObject(new UpdateBuilder(this)).build()) {
             statement.executeUpdate();
