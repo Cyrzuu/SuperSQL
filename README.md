@@ -43,6 +43,11 @@ superSQL.createTable(table, Throwable::printStackTrace);
 
 PlayerObject playerObject = new PlayerObject();
 table.createUpdate(playerObject);
+
+SQLResult result = table.selectBuilder().where("uuid", UUID.randomUUID().toString()).execute();
+while (result.next()) {
+    getLogger().info(result.getString("username"));
+}
 ```
 
 ```java
