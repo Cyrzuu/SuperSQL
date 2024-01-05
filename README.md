@@ -45,7 +45,7 @@ PlayerObject playerObject = new PlayerObject();
 table.createUpdate(playerObject);
 ```
 
-``java
+```java
 public class PlayerObject implements SQLObject {
 
     private final UUID uuid = UUID.randomUUID();
