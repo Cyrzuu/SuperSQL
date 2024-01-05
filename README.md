@@ -34,9 +34,9 @@ SuperSQL superSQL = new SuperMySQL(DATABASE_HOST, DATABASE_PORT, DATABASE_BASE, 
 
 SQLTable table = SQLTable.builder(superSQL, "table_name")
         .add(new VarcharColumn("uuid", 36).primaryKey())
-        .add(new StringColumn("username"))
-        .add(new IntegerColumn("kills"))
-        .add(new BytesColumn("bytes"))
+        .add(new StringColumn("username").unique().notNull())
+        .add(new IntegerColumn("kills").notNull())
+        .add(new BytesColumn("bytes").notNull())
         .build();
 
 superSQL.createTable(table, Throwable::printStackTrace);
