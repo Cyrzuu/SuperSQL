@@ -1,5 +1,6 @@
 package me.cyrzu.git.supersql.column;
 
+import me.cyrzu.git.supersql.Types;
 import org.jetbrains.annotations.NotNull;
 
 public class DoubleColumn extends AbstractColumn {
@@ -9,7 +10,7 @@ public class DoubleColumn extends AbstractColumn {
     }
 
     @Override
-    public String create() {
+    public String create(@NotNull Types types) {
         StringBuilder builder = new StringBuilder(name + " REAL");
         if(isUnique()) {
             builder.append(" UNIQUE");

@@ -4,7 +4,10 @@ import me.cyrzu.git.supersql.column.AbstractColumn;
 import me.cyrzu.git.supersql.column.AbstractKeyColumn;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
 public enum Types {
 
@@ -61,7 +64,7 @@ public enum Types {
 
             while (iterator.hasNext()) {
                 AbstractColumn column = iterator.next();
-                builder.append(column.create());
+                builder.append(column.create(this));
 
                 if (iterator.hasNext()) {
                     builder.append(", ");
@@ -100,7 +103,7 @@ public enum Types {
             final List<AbstractColumn> values = List.copyOf(table.getColumns().values());
             for (int i = 0; i < values.size(); i++) {
                 final AbstractColumn column = values.get(i);
-                builder.append(column.create());
+                builder.append(column.create(this));
 
                 if(i != values.size() - 1) {
                     builder.append(", ");

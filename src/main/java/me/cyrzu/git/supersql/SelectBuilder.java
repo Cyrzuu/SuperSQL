@@ -1,13 +1,19 @@
 package me.cyrzu.git.supersql;
 
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class SelectBuilder {
+
+    @NotNull
+    private final JavaPlugin plugin;
 
     @NotNull
     private final SQLTable sqlTable;
@@ -24,12 +30,14 @@ public class SelectBuilder {
     private int limit = 0;
 
     public SelectBuilder(@NotNull SQLTable sqlTable) {
+        this.plugin = sqlTable.getSuperSQL().getPlugin();
         this.sqlTable = sqlTable;
         this.columns = new HashSet<>();
         this.where = new LinkedHashMap<>();
     }
 
     public SelectBuilder(@NotNull SQLTable sqlTable, @NotNull String... columns) {
+        this.plugin = sqlTable.getSuperSQL().getPlugin();
         this.sqlTable = sqlTable;
         this.columns = Set.of(columns);
         this.where = new LinkedHashMap<>();
@@ -58,6 +66,10 @@ public class SelectBuilder {
     public SelectBuilder limit(int limit) {
         this.limit = Math.max(1, limit);
         return this;
+    }
+
+    public void executeAsync(@NotNull Consumer<@NotNull SQLResult> result) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> result.accept(execute()));
     }
 
     @NotNull

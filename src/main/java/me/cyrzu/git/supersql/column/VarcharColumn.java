@@ -1,5 +1,6 @@
 package me.cyrzu.git.supersql.column;
 
+import me.cyrzu.git.supersql.Types;
 import org.jetbrains.annotations.NotNull;
 
 public class VarcharColumn extends AbstractKeyColumn {
@@ -12,8 +13,8 @@ public class VarcharColumn extends AbstractKeyColumn {
     }
 
     @Override
-    public String create() {
-        StringBuilder builder = new StringBuilder(name + " VARCHAR(%s) CHARSET utf8".formatted(max));
+    public String create(@NotNull Types types) {
+        StringBuilder builder = new StringBuilder(name + " VARCHAR(%s)%s".formatted(max, types == Types.MYSQL ? " CHARSET utf8" : ""));
         if(isPrimaryKey()) {
             builder.append(" PRIMARY KEY");
 

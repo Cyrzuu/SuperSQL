@@ -1,6 +1,7 @@
 package me.cyrzu.git.supersql.column;
 
 import lombok.Getter;
+import me.cyrzu.git.supersql.Types;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractColumn {
@@ -29,6 +30,6 @@ public abstract class AbstractColumn {
         return this;
     }
 
-    public abstract String create();
+    public abstract String create(@NotNull Types types);
 
 }
