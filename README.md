@@ -10,10 +10,10 @@ Wow 🤣🤣
 </repository>
 
 <dependency>
-<groupId>com.github.Cyrzuu</groupId>
-<artifactId>SuperSQL</artifactId>
-<version>1.1.3</version>
-</dependency>
+    <groupId>com.github.Cyrzuu</groupId>
+    <artifactId>SuperSQL</artifactId>
+    <version>1.1.3</version>
+    </dependency>
 ```
 
 **Gradle:**
