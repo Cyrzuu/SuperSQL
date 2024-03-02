@@ -13,7 +13,7 @@ Wow 🤣🤣
     <groupId>com.github.Cyrzuu</groupId>
     <artifactId>SuperSQL</artifactId>
     <version>1.1.3</version>
-    </dependency>
+</dependency>
 ```
 
 **Gradle:**
