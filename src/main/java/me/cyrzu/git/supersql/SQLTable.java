@@ -54,7 +54,7 @@ public class SQLTable {
 
     @NotNull
     public Map<String, AbstractColumn> getColumns() {
-        return Map.copyOf(columns);
+        return new LinkedHashMap<>(columns);
     }
 
     @NotNull
