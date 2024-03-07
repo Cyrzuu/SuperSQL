@@ -40,7 +40,7 @@ public class SQLTable {
         this.name = name;
         this.columns = columns;
         this.key = key;
-        this.INSERT = superSQL.getType().insertAndUpdate(this);
+        this.INSERT = superSQL.getType().insertAndUpdate(this, 1);
     }
 
     @NotNull
@@ -67,6 +67,11 @@ public class SQLTable {
         return new UpdateBuilder(this);
     }
 
+    @NotNull
+    public UpdateBuilder updateBuilder(@NotNull PreparedStatement statement) {
+        return new UpdateBuilder(this, statement);
+    }
+
     public SelectBuilder selectBuilder(@NotNull String... columns) {
         return new SelectBuilder(this, columns);
     }
@@ -79,7 +84,7 @@ public class SQLTable {
         return new DeleteBuilder(this);
     }
 
-    public int createUpdate(@NotNull SQLObject object) {
+    public long createUpdate(@NotNull SQLObject object) {
         return object.updateObject(new UpdateBuilder(this)).execute();
     }
 
@@ -87,8 +92,24 @@ public class SQLTable {
         createAsyncUpdate(object, null);
     }
 
-    public void createAsyncUpdate(@NotNull SQLObject object, @Nullable Consumer<Integer> consumer) {
-        object.updateObject(new UpdateBuilder(this)).executeAsync(consumer);
+    public void createAsyncUpdate(@NotNull SQLObject object, @Nullable Consumer<Long> time) {
+        object.updateObject(new UpdateBuilder(this)).executeAsync(time);
+    }
+
+    public long createMultiUpdate(@NotNull Collection<? extends SQLObject> objects) {
+        long start = System.currentTimeMillis();
+        MultiUpdateBuilder<? extends SQLObject> multiUpdateBuilder = new MultiUpdateBuilder<>(this, objects);
+        multiUpdateBuilder.execute();
+        return System.currentTimeMillis() - start;
+    }
+
+    public void createAsyncMultiUpdate(@NotNull Collection<? extends SQLObject> objects) {
+        createAsyncMultiUpdate(objects, null);
+    }
+
+    public void createAsyncMultiUpdate(@NotNull Collection<? extends SQLObject> objects, @Nullable Consumer<Long> consumer) {
+        MultiUpdateBuilder<? extends SQLObject> multiUpdateBuilder = new MultiUpdateBuilder<>(this, objects);
+        multiUpdateBuilder.executeAsync(consumer);
     }
 
     public SQLResult sqlResult(@NotNull String sql) {

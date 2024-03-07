@@ -12,7 +12,7 @@ Wow 🤣🤣
 <dependency>
     <groupId>com.github.Cyrzuu</groupId>
     <artifactId>SuperSQL</artifactId>
-    <version>1.1.5</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-        implementation 'com.github.Cyrzuu:SuperSQL:1.1.5'
+        implementation 'com.github.Cyrzuu:SuperSQL:1.2.0'
 }
 ```
 
@@ -72,5 +72,21 @@ public class PlayerObject implements SQLObject {
                 .put(bytes);
     }
 
+}
+```
+
+```java
+public class Clazz {
+    SuperSQL superSQL = new SuperSQLite(this, new File(getDataFolder(), "database.db"));
+    SQLTable table = SQLTable.builder(superSQL, "table_name")
+            .add(new VarcharColumn("username", 16).primaryKey())
+            .add(new StringColumn("discord"))
+            .build();
+
+    SQLObject sqlObject1 = builder -> builder.put("Player1").put("discord_player1");
+    SQLObject sqlObject2 = builder -> builder.put("Player2").put("discord_player2");
+    Collection<SQLObject> objects = List.of(sqlObject1, sqlObject2);
+    
+    table.createAsyncMultiUpdate(objects, i -> System.out.println("Save multi objects during %sms".formatted(i)));
 }
 ```

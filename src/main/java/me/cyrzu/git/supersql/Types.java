@@ -13,7 +13,7 @@ public enum Types {
 
     MYSQL {
         @Override
-        @NotNull String insertAndUpdate(@NotNull SQLTable table) {
+        @NotNull String insertAndUpdate(@NotNull SQLTable table, int valueAmount) {
             StringBuilder builder = new StringBuilder("INSERT INTO ").append(table.getName()).append(" (");
             StringBuilder questMark = new StringBuilder();
 
@@ -29,7 +29,15 @@ public enum Types {
                 }
             }
 
-            builder.append(") VALUES (").append(questMark).append(")");
+            builder.append(") VALUES ");
+
+            for (int i = 0; i < valueAmount; i++) {
+                builder.append("(").append(questMark).append(")");
+
+                if (i < valueAmount - 1) {
+                    builder.append(", ");
+                }
+            }
 
             if(table.getKey() != null) {
                 builder.append(" ON DUPLICATE KEY UPDATE " );
@@ -77,7 +85,7 @@ public enum Types {
     },
     SQLITE {
         @Override
-        @NotNull String insertAndUpdate(@NotNull SQLTable table) {
+        @NotNull String insertAndUpdate(@NotNull SQLTable table, int valueAmount) {
             StringBuilder builder = new StringBuilder("INSERT OR REPLACE INTO ").append(table.getName()).append(" (");
             StringBuilder questMark = new StringBuilder();
 
@@ -93,7 +101,16 @@ public enum Types {
                 }
             }
 
-            builder.append(") VALUES (").append(questMark).append(");");
+            // Replicating the values and placeholders based on valueAmount
+            StringBuilder values = new StringBuilder();
+            for (int i = 0; i < valueAmount; i++) {
+                values.append("(").append(questMark).append(")");
+                if (i < valueAmount - 1) {
+                    values.append(", ");
+                }
+            }
+
+            builder.append(") VALUES ").append(values).append(";");
             return builder.toString();
         }
 
@@ -116,7 +133,7 @@ public enum Types {
     };
 
     @NotNull
-    abstract String insertAndUpdate(@NotNull SQLTable table);
+    abstract String insertAndUpdate(@NotNull SQLTable table, int valueAmount);
 
     @NotNull
     abstract String createTable(@NotNull SQLTable table);

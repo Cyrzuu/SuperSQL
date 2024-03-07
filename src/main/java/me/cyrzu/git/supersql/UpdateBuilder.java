@@ -1,5 +1,6 @@
 package me.cyrzu.git.supersql;
 
+import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -19,58 +20,46 @@ public class UpdateBuilder {
 
     private int index = 1;
 
+    @SneakyThrows
     public UpdateBuilder(@NotNull SQLTable table) {
-        try {
-            this.plugin = table.getSuperSQL().getPlugin();
-            this.statement = table.getSuperSQL().getConnection().prepareStatement(table.getINSERT());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        this.plugin = table.getSuperSQL().getPlugin();
+        this.statement = table.getSuperSQL().getConnection().prepareStatement(table.getINSERT());
     }
 
+    @SneakyThrows
+    public UpdateBuilder(@NotNull SQLTable table, @NotNull PreparedStatement statement) {
+        this.plugin = table.getSuperSQL().getPlugin();
+        this.statement = statement;
+    }
+
+    @SneakyThrows
     public UpdateBuilder put(@NotNull String value) {
-        try {
-            statement.setString(index++, value);
-            return this;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        statement.setString(index++, value);
+        return this;
     }
 
+    @SneakyThrows
     public UpdateBuilder put(int value) {
-        try {
-            statement.setInt(index++, value);
-            return this;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        statement.setInt(index++, value);
+        return this;
     }
 
+    @SneakyThrows
     public UpdateBuilder put(long value) {
-        try {
-            statement.setLong(index++, value);
-            return this;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        statement.setLong(index++, value);
+        return this;
     }
 
+    @SneakyThrows
     public UpdateBuilder put(double value) {
-        try {
-            statement.setDouble(index++, value);
-            return this;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        statement.setDouble(index++, value);
+        return this;
     }
 
+    @SneakyThrows
     public UpdateBuilder put(byte[] value) {
-        try {
-            statement.setBytes(index++, value);
-            return this;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        statement.setBytes(index++, value);
+        return this;
     }
 
     @NotNull
@@ -82,18 +71,20 @@ public class UpdateBuilder {
         executeAsync(null);
     }
 
-    public void executeAsync(@Nullable Consumer<Integer> consumer) {
+    public void executeAsync(@Nullable Consumer<Long> consumer) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-           int index = execute();
+            long index = execute();
            if(consumer != null) {
                consumer.accept(index);
            }
         });
     }
 
-    public int execute() {
+    public long execute() {
         try {
-            return statement.executeUpdate();
+            long start = System.currentTimeMillis();
+            statement.executeUpdate();
+            return System.currentTimeMillis() - start;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
