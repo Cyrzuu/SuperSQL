@@ -101,6 +101,10 @@ public enum Types {
                 }
             }
 
+            if(valueAmount <= 0) {
+                return builder.append(");").toString();
+            }
+
             // Replicating the values and placeholders based on valueAmount
             StringBuilder values = new StringBuilder();
             for (int i = 0; i < valueAmount; i++) {

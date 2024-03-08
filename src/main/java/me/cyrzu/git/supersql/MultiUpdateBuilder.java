@@ -30,6 +30,10 @@ public class MultiUpdateBuilder<T extends SQLObject> {
 
     @SneakyThrows
     public MultiUpdateBuilder(@NotNull SQLTable sqlTable, @NotNull Collection<T> values) {
+        if(values.isEmpty()) {
+            throw new RuntimeException("The `MultiUpdateBuilder` could not be created due to an empty collection");
+        }
+
         SuperSQL superSQL = sqlTable.getSuperSQL();
 
         this.plugin = superSQL.getPlugin();
@@ -38,7 +42,6 @@ public class MultiUpdateBuilder<T extends SQLObject> {
 
         String statment = superSQL.getType().insertAndUpdate(sqlTable, values.size());
         this.statement = superSQL.getConnection().prepareStatement(statment);
-
     }
 
     public PreparedStatement build() {
