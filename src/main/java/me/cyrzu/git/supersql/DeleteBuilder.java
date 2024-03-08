@@ -1,5 +1,7 @@
 package me.cyrzu.git.supersql;
 
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
@@ -7,6 +9,7 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class DeleteBuilder {
 
@@ -36,7 +39,17 @@ public class DeleteBuilder {
         return this;
     }
 
-    public int execute() {
+    public void executeAsync() {
+        executeAsync((ms) -> {});
+    }
+
+    public void executeAsync(@NotNull Consumer<Long> consumer) {
+        JavaPlugin plugin = sqlTable.getSuperSQL().getPlugin();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> consumer.accept(execute()));
+    }
+
+    public long execute() {
+        long start = System.currentTimeMillis();
         StringBuilder builder = new StringBuilder("DELETE FROM ").append(sqlTable.getName());
 
         if(!where.isEmpty()) {
@@ -61,7 +74,8 @@ public class DeleteBuilder {
                 statement.setObject(index++, value);
             }
 
-            return statement.executeUpdate();
+            statement.executeUpdate();
+            return System.currentTimeMillis() - start;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
