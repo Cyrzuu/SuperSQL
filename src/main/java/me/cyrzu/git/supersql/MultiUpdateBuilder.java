@@ -52,7 +52,6 @@ public class MultiUpdateBuilder<T extends SQLObject> {
         }
 
         this.builded = true;
-        System.out.println("Rozmiar stringa: " + this.statement.toString().length());
         return this.statement;
     }
 
