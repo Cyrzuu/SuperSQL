@@ -70,6 +70,10 @@ public class MultiUpdateBuilder<T extends SQLObject> {
     }
 
     public long execute() {
+        if(values.isEmpty()) {
+            return 0;
+        }
+
         PreparedStatement statement = this.build();
         try {
             return statement.executeUpdate();
