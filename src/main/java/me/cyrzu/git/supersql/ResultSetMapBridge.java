@@ -9,6 +9,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+
+/*
+* Author: Ome_R
+* GitHub: https://github.com/BG-Software-LLC/
+*/
+
 public class ResultSetMapBridge implements Map<String, Object> {
 
     private final ResultSet resultSet;
