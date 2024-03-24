@@ -1,6 +1,7 @@
 package me.cyrzu.git.supersql;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 import me.cyrzu.git.supersql.column.AbstractColumn;
 import me.cyrzu.git.supersql.column.AbstractKeyColumn;
 import me.cyrzu.git.supersql.sql.SuperSQL;
@@ -110,6 +111,16 @@ public class SQLTable {
     public void createAsyncMultiUpdate(@NotNull Collection<? extends SQLObject> objects, @Nullable Consumer<Long> consumer) {
         MultiUpdateBuilder<? extends SQLObject> multiUpdateBuilder = new MultiUpdateBuilder<>(this, objects);
         multiUpdateBuilder.executeAsync(consumer);
+    }
+
+    @SneakyThrows
+    public void loadAllObjects(@NotNull Consumer<Map<String, Object>> function) {
+        ResultSet resultSet = sqlQuery("SELECT * FROM " + name);
+        while (resultSet.next()) {
+            try {
+                function.accept(new ResultSetMapBridge(resultSet));
+            } catch (Exception ignored) { }
+        }
     }
 
     public SQLResult sqlResult(@NotNull String sql) {
