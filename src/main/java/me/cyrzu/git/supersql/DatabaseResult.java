@@ -1,5 +1,7 @@
 package me.cyrzu.git.supersql;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
@@ -106,7 +108,7 @@ public class DatabaseResult {
     public Optional<UUID> getUUID(String key) {
         Optional<String> value = getString(key);
 
-        if (!value.isPresent())
+        if (value.isEmpty())
             return Optional.empty();
 
         try {
@@ -119,6 +121,16 @@ public class DatabaseResult {
 
     public Optional<byte[]> getBlob(String key) {
         return getObject(key, byte[].class);
+    }
+
+    public Optional<World> getWorld(String key) {
+        Optional<String> value = getString("key");
+
+        if (value.isEmpty())
+            return Optional.empty();
+
+        World world = Bukkit.getWorld(value.get());
+        return world != null ? Optional.of(world) : Optional.empty();
     }
 
     private <T> Optional<T> getObject(String key, Class<T> clazz) {
