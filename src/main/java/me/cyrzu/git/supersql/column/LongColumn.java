@@ -12,9 +12,7 @@ public class LongColumn extends AbstractKeyColumn {
     @Override
     public String create(@NotNull Types types) {
         StringBuilder builder = new StringBuilder(name + " BIGINT");
-        if(isPrimaryKey()) {
-            builder.append(" PRIMARY KEY");
-        } else {
+        if(!isPrimaryKey()) {
             if(isUnique()) {
                 builder.append(" UNIQUE");
             }

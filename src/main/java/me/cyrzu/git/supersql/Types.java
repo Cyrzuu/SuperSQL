@@ -65,23 +65,46 @@ public enum Types {
             return builder.append(";").toString();
         }
 
+
         @Override
         @NotNull String createTable(@NotNull SQLTable table) {
             StringBuilder builder = new StringBuilder("CREATE TABLE IF NOT EXISTS " + table.getName() + " (");
             Iterator<AbstractColumn> iterator = table.getColumnList().iterator();
+            List<String> keys = new ArrayList<>();
 
             while (iterator.hasNext()) {
                 AbstractColumn column = iterator.next();
                 builder.append(column.create(this));
+
+                if(column instanceof AbstractKeyColumn keyColumn && keyColumn.isPrimaryKey()) {
+                    keys.add(keyColumn.getName());
+                }
 
                 if (iterator.hasNext()) {
                     builder.append(", ");
                 }
             }
 
+            if(!keys.isEmpty()) {
+                StringBuilder primaryKeyBuilder = new StringBuilder(", PRIMARY KEY (");
+                Iterator<String> keysIterator = keys.iterator();
+                while (keysIterator.hasNext()) {
+                    String key = keysIterator.next();
+                    primaryKeyBuilder.append(key);
+
+                    if(keysIterator.hasNext()) {
+                        primaryKeyBuilder.append(", ");
+                    }
+                }
+
+                primaryKeyBuilder.append(")");
+                builder.append(primaryKeyBuilder);
+            }
+
             builder.append(");");
             return builder.toString();
         }
+
     },
     SQLITE {
         @Override
@@ -121,19 +144,42 @@ public enum Types {
         @Override
         @NotNull String createTable(@NotNull SQLTable table) {
             StringBuilder builder = new StringBuilder("CREATE TABLE IF NOT EXISTS " + table.getName() + " (");
-            final List<AbstractColumn> values = List.copyOf(table.getColumns().values());
-            for (int i = 0; i < values.size(); i++) {
-                final AbstractColumn column = values.get(i);
+            Iterator<AbstractColumn> iterator = table.getColumnList().iterator();
+            List<String> keys = new ArrayList<>();
+
+            while (iterator.hasNext()) {
+                AbstractColumn column = iterator.next();
                 builder.append(column.create(this));
 
-                if(i != values.size() - 1) {
+                if(column instanceof AbstractKeyColumn keyColumn && keyColumn.isPrimaryKey()) {
+                    keys.add(keyColumn.getName());
+                }
+
+                if (iterator.hasNext()) {
                     builder.append(", ");
                 }
+            }
+
+            if(!keys.isEmpty()) {
+                StringBuilder primaryKeyBuilder = new StringBuilder(", PRIMARY KEY (");
+                Iterator<String> keysIterator = keys.iterator();
+                while (keysIterator.hasNext()) {
+                    String key = keysIterator.next();
+                    primaryKeyBuilder.append(key);
+
+                    if(keysIterator.hasNext()) {
+                        primaryKeyBuilder.append(", ");
+                    }
+                }
+
+                primaryKeyBuilder.append(")");
+                builder.append(primaryKeyBuilder);
             }
 
             builder.append(");");
             return builder.toString();
         }
+
     };
 
     @NotNull

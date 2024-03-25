@@ -15,10 +15,7 @@ public class VarcharColumn extends AbstractKeyColumn {
     @Override
     public String create(@NotNull Types types) {
         StringBuilder builder = new StringBuilder(name + " VARCHAR(%s)%s".formatted(max, types == Types.MYSQL ? " CHARSET utf8" : ""));
-        if(isPrimaryKey()) {
-            builder.append(" PRIMARY KEY");
-
-        } else {
+        if(!isPrimaryKey()) {
             if(isUnique()) {
                 builder.append(" UNIQUE");
             }
