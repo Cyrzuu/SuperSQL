@@ -48,7 +48,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>C:\Users\Legion\Documents\ASerwerTest\GreenTopia 1.20.4\plugins</outputDirectory>
+                    <outputDirectory>C:\Users\Legion\Documents\ASerwerTest\ProjektRP 1.20.1\plugins</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

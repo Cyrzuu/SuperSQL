@@ -115,7 +115,9 @@ public class SQLTable {
 
     @SneakyThrows
     public void loadAllObjects(@NotNull Consumer<Map<String, Object>> function) {
-        ResultSet resultSet = sqlQuery("SELECT * FROM " + name);
+        PreparedStatement preparedStatement = superSQL.getConnection().prepareStatement("SELECT * FROM " + name);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
         while (resultSet.next()) {
             try {
                 function.accept(new ResultSetMapBridge(resultSet));

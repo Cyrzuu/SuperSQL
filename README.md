@@ -12,7 +12,7 @@ Wow 🤣🤣
 <dependency>
     <groupId>com.github.Cyrzuu</groupId>
     <artifactId>SuperSQL</artifactId>
-    <version>1.2.6</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 
@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-        implementation 'com.github.Cyrzuu:SuperSQL:1.2.6
+        implementation 'com.github.Cyrzuu:SuperSQL:1.3.0
 }
 ```
 
