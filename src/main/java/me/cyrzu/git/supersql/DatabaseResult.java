@@ -124,7 +124,7 @@ public class DatabaseResult {
     }
 
     public Optional<World> getWorld(String key) {
-        Optional<String> value = getString("key");
+        Optional<String> value = getString(key);
 
         if (value.isEmpty())
             return Optional.empty();
