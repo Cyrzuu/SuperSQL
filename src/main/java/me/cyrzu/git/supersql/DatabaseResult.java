@@ -133,6 +133,11 @@ public class DatabaseResult {
         return world != null ? Optional.of(world) : Optional.empty();
     }
 
+    public <T extends Enum<T>> Optional<T> getEnum(String key, Class<T> enumType) {
+        T anEnum = EnumHelper.getEnum(key, enumType);
+        return anEnum != null ? Optional.of(anEnum) : Optional.empty();
+    }
+
     private <T> Optional<T> getObject(String key, Class<T> clazz) {
         Object value = getObject(key);
         return Optional.ofNullable(value == null || !value.getClass().isAssignableFrom(clazz) ? null : clazz.cast(value));
